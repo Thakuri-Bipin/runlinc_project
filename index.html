@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>client</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        /* #registerForm {
+            display: none;
+        }
+
+        #loginForm {
+            display: none;
+        }
+
+        #sensorDetails {
+            display: none;
+        } */
+
+        input[type=text],
+        input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=text]:focus,
+        input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        .actionbtn {
+            background-color: #aa040a;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .actionbtn:hover {
+            opacity: 1;
+        }
+
+        a {
+            color: rgb(248, 89, 89);
+        }
+
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+        .error {
+            color: #ff0000;
+            font-family: Arial, sans-serif;
+            display: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .temperatureDiv {
+            align-self: center;
+        }
+
+        .tempVal {
+            position: absolute;
+            bottom: 0;
+            height: 30px;
+            width: 30px;
+            background-color: rgb(255, 200, 0);
+        }
+
+        .tempBase {
+            position: relative;
+            width: 300px;
+            height: 30px;
+            background-color: rgb(147, 147, 147);
+        }
+
+
+        .humidVal {
+            position: absolute;
+            bottom: 0;
+            height: 30px;
+            width: 60px;
+            background-color: rgb(0, 123, 255);
+        }
+
+        .humidBase {
+            position: relative;
+            width: 300px;
+            height: 30px;
+            background-color: rgb(147, 147, 147);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="registerFormId">
+            <h1>Authenticate</h1>
+            <p>Please fill in this form to authenticate.</p>
+            <hr>
+
+            <label for="username"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="username" id="ruser" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" id="rpass" required>
+
+            <hr>
+            <button onclick="register();" id="registerbtn" class="actionbtn">Register</button>
+            <button onclick="login();" id="loginbtn" class="actionbtn">Login</button>
+            <h3 id="h3id">login</h3>
+
+            <h3 id="error" style="color: #aa040a;">no error</h3>
+
+            <button onclick="redirectToUrl()">redirect</button>
+            <button onclick="getAllUsers()">get all users</button>
+            <div class="container signin">
+                <p>Forgot Password? <a href="#">Reset</a></p>
+            </div>
+        </div>
+
+        <div id="dashboardUi">
+            <h2>Temperature and Humidity</h2>
+            <div class="temperatureDiv">
+                <h4>Temperature</h4>
+                <div class="tempBase">
+                    <div id="temperatureValue" class="tempVal"></div>
+                </div>
+                <h4 id="temperatureTextValue" class="tempTextValue">35°C</h4>
+            </div>
+
+            <div class="humidityDiv">
+                <h4>Humidity</h4>
+                <div class="humidBase">
+                    <div id="humidityValue" class="humidVal"></div>
+                </div>
+                <h4 id="humidityTextValue" class="humidTextValue">60%</h4>
+            </div>
+
+            <button onclick="temp()">temperature</button>
+        </div>
+    </div>
+
+
+
+    <!-- <h3>login</h3>
+    <input type="text" placeholder="user" name="user" id="luser">
+    <br />
+    <input type="text" placeholder="pass" name="pass" id="lpass">
+    <br />
+    <button onclick="login()">Login</button>
+
+    <h3>Register</h3>
+    <input type="text" placeholder="user" id="ruser" />
+    <br />
+    <input type="text" placeholder="pass" id="rpass" />
+    <br />
+    <button onclick="register()">Register</button> -->
+
+
+
+
+
+    <script>
+
+        var baseUrl = 'http://localhost:4000';
+
+        function getAllUsers() {
+            fetch(baseUrl + '/getAllUsers')
+                .then(res => res.json())
+                .then(res => {
+                    console.table(res);
+
+                }).catch(err => console.log(err));
+        }
+
+
+        function redirectToUrl() {
+
+            fetch(baseUrl + '/getNgrokUrl')
+                .then(res => res.text())
+                .then(res => {
+                    console.log(res);
+                    document.getElementById("h3id").innerHTML = res;
+                    window.location.replace(res);
+                })
+                .catch(res => {
+                    document.getElementById("error").innerHTML = error;
+                })
+
+        }
+
+
+        function register() {
+            document.getElementById("error").innerHTML = '';
+            var ruser = document.getElementById("ruser").value;
+            var rpass = document.getElementById("rpass").value;
+
+
+
+            if (ruser == '' || rpass == '') {
+                document.getElementById("error").innerHTML = 'Email or Password is empty!';
+                return;
+            }
+
+            console.log(ruser + rpass);
+            var options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "username": ruser,
+                    "password": rpass
+                })
+            };
+
+            fetch(baseUrl + '/register', options)
+                .then(res => res.json())
+                .then(res => {
+
+                    document.getElementById("h3id").innerHTML = res.username;
+                }).catch((error) => {
+                    document.getElementById("error").innerHTML = error;
+                });
+
+
+        }
+
+        function login() {
+            document.getElementById("error").innerHTML = '';
+            var loginuser = document.getElementById("ruser").value;
+            var loginpass = document.getElementById("rpass").value;
+
+            if (loginuser == '' || loginpass == '') {
+                document.getElementById("error").innerHTML = 'Email or Password is empty!';
+                return;
+            }
+
+            var options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "username": loginuser,
+                    "password": loginpass
+                })
+            };
+
+
+            fetch(baseUrl + '/login', options)
+                .then(res => res.text())
+                .then(res => {
+                   // redirectToUrl();
+                    document.getElementById("h3id").innerHTML = res;
+                    showDashboardUi();
+
+                }).catch((error) => {
+                    document.getElementById("error").innerHTML = error;
+                });
+        }
+
+        function showDashboardUi(){
+            document.getElementById("registerFormId").style.display = "none";
+
+            document.getElementById("dashboardUi").style.display = "block";
+        }
+
+
+        function red(res) {
+            console.log('red function ' + res);
+            window.location.replace = res;
+        }
+
+
+    </script>
+
+</body>
+
+</html>
