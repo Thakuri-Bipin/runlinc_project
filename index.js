@@ -36,17 +36,17 @@ var users = [
 // ngrok.consoleLog("INFO"); // info logging
 
 
-ngrok.authtoken(authToken);
-ngrok.connect({
-    addr: 3000,
-    addr: 'http://192.168.137.61',
-    oauth_provider: "google",
-    oauth_allow_emails: userEmails,
-    request_header_add: "ngrok-skip-browser-warning:2222",
-}).then(listener => {
-    ingressUrl = listener.url().toString();
-    console.log(`Ingress established at: ${listener.url()}`);
-});
+// ngrok.authtoken(authToken);
+// ngrok.connect({
+//     addr: 3000,
+//     addr: 'http://192.168.137.61',
+//     oauth_provider: "google",
+//     oauth_allow_emails: userEmails,
+//     request_header_add: "ngrok-skip-browser-warning:2222",
+// }).then(listener => {
+//     ingressUrl = listener.url().toString();
+//     console.log(`Ingress established at: ${listener.url()}`);
+// });
 
 
 

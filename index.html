@@ -197,7 +197,7 @@
 
 
     <script>
-
+        document.getElementById("dashboardUi").style.display = "none";
         var baseUrl = 'http://localhost:4000';
 
         function getAllUsers() {
@@ -287,16 +287,21 @@
             fetch(baseUrl + '/login', options)
                 .then(res => res.text())
                 .then(res => {
-                   // redirectToUrl();
-                    document.getElementById("h3id").innerHTML = res;
-                    showDashboardUi();
+                    // redirectToUrl();
+                    if (res !== '404') {
+                        document.getElementById("h3id").innerHTML = res;
+                        showDashboardUi();
+                    }
+                    else{
+                        document.getElementById("error").innerHTML = 'Invalid User';
+                    }
 
                 }).catch((error) => {
                     document.getElementById("error").innerHTML = error;
                 });
         }
 
-        function showDashboardUi(){
+        function showDashboardUi() {
             document.getElementById("registerFormId").style.display = "none";
 
             document.getElementById("dashboardUi").style.display = "block";
