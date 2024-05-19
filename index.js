@@ -3,6 +3,8 @@ const { v4: uuidv4 } = require("uuid");
 const ngrok = require('@ngrok/ngrok'); // ngrok module to expose your local server to the internet
 const express = require('express');
 const cors = require('cors');
+import serverless from "serverless-http";
+
 const app = express();
 app.use(express.json());
 
@@ -113,3 +115,5 @@ app.use(cors());
 app.listen(4000, () => {
     console.log("Server successfully running on port 4000");
 });
+
+export const handler = serverless(api);
