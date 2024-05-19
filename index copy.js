@@ -8,8 +8,6 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-const netlifyconfig = "/.netlify/functions";
-
 
 
 const authToken = '2eoZ6uQ6CFvMLEUF0lPGOCt6FP1_ofLF7WmgJTr21QSb8Gb7';
@@ -54,7 +52,7 @@ var users = [
 
 
 
-app.get(netlifyconfig + '/', (req, res) => {
+app.get('/', (req, res) => {
     res.writeHead(200, {
         'Content-Type': 'text/plain'
     });
@@ -63,16 +61,16 @@ app.get(netlifyconfig + '/', (req, res) => {
 });
 
 
-app.get(netlifyconfig + '/dummy', cors(), (req, res) => {
+app.get('/dummy', cors(), (req, res) => {
     res.send(users);
 });
 
-app.get(netlifyconfig + '/getAllUsers', cors(), (req, res) => {
+app.get('/getAllUsers', cors(), (req, res) => {
     res.send(users);
 });
 
 // register user
-app.post(netlifyconfig + '/register', cors(), (req, res) => {
+app.post('/register', cors(), (req, res) => {
     const { username, password } = req.body;
     console.log("register/" + username + "-" + password);
     const newUser = {
@@ -89,7 +87,7 @@ app.post(netlifyconfig + '/register', cors(), (req, res) => {
 });
 
 //login user
-app.post(netlifyconfig + '/login', cors(), (req, res) => {
+app.post('/login', cors(), (req, res) => {
     const { username, password } = req.body;
     console.log("login/" + username + "-" + password);
     const index = users.findIndex(user =>
@@ -108,7 +106,7 @@ app.post(netlifyconfig + '/login', cors(), (req, res) => {
 
 });
 
-app.get(netlifyconfig + '/getNgrokUrl', cors(), (req, res) => {
+app.get('/getNgrokUrl', cors(), (req, res) => {
     res.send(ingressUrl.toString());
 })
 
@@ -118,4 +116,4 @@ app.listen(4000, () => {
     console.log("Server successfully running on port 4000");
 });
 
-export const handler = serverless(app);
+export const handler = serverless(api);
